@@ -109,7 +109,7 @@ io.on('connection', function(socket) {
 		});
 		socket.on('do testing', function() {
 				connections[socket.id]['name'] = 'testRoomMaker';
-				roomObj = {'characterArr' : ['Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Minion of Mordred'], 'lady' : false, 'playerArr': [], 'creator': connections[socket.id]['name'], 'name' : 'testing', 'playersReady': 0};
+				roomObj = {'characterArr' : ['Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Merlin', 'Minion of Mordred'], 'lady' : false, 'playerArr': [], 'creator': connections[socket.id]['name'], 'name' : 'testing', 'playersReady': 0};
 				testName='e';
 				for(var key in connections) {
 						connections[key]['roomName'] = roomObj['name'];
@@ -153,192 +153,193 @@ io.on('connection', function(socket) {
 						socket.emit('middleWareHandlePls', ['room full', match['name']]);
 				}
 		});
-		socket.on('set up room', function(uselessData) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				console.log('found room: ', room);
-				if(!room['creator'].localeCompare(connections[socket.id]['name'])) {
-					console.log('found creator: ', room['creator']);
-					var charCopy = [];
-					var playerCopy = [];
-					while(room['characterArr'].length) {
-							charCopy.push(room['characterArr'].splice(Math.floor(Math.random() * room['characterArr'].length), 1)[0]);
-					};
-					while(room['playerArr'].length) {
-							playerCopy.push(room['playerArr'].splice(Math.floor(Math.random() * room['playerArr'].length), 1)[0]);
-					};
-					room['playerArr'] = playerCopy;
-					room['characterArr'] = charCopy;
-					room['playerArr'].forEach(function(playerName, i) {
-							connections[getByName(playerName)]['character'] = room['characterArr'][i];
-					});
-					for(var key in connections) {
-						if(room['playerArr'].indexOf(connections[key]['name']) >= 0) {
-							console.log('emitting to '+connections[key]['name']+' to tell him that he is '+connections[key]['character']);
-							infoObj = {character: connections[key]['character'], info: 'nothing.'};
-							connections[key]['info'] = 'nothing';
-							if(infoObj['character'] === "Merlin") {
-									info = getByChar('Morgana', room['name']);
-									info = info.concat(getByChar('Oberon', room['name']));
-									info = info.concat(getByChar('Minion of Mordred', room['name']));
-									info2 = [];
-									while(info.length) {
-											info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
-									}
-									info = info2;
-									info = info.join(', ') + " are bad.";
-									infoObj['info'] = info;
-									connections[key]['info'] = info;
-							}
-							if(infoObj['character'] === 'Percival') {
-									info = getByChar('Merlin', room['name']);
-									info = info.concat(getByChar('Morgana', room['name']));
-									info2 = [];
-									while(info.length) {
-											info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
-									}
-									info = info2;
-									if(info.length) {
-											info = 'out of '+info.join(' and ') + " one is Morgana, one is Merlin, but which is which?";
-											infoObj['info'] = info;
-											connections[key]['info'] = info;
-									}
-							}
-							if(infoObj['character'] === 'Mordred') {
-									info = getByChar('Morgana', room['name']);
-									info = info.concat(getByChar('Minion of Mordred', room['name']));
-									info2 = [];
-									while(info.length) {
-											info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
-									}
-									info = info2;
-									if(info.length) {
-											info = info.join(', ') + " are your fellow evil doers.";
-											infoObj['info'] = info;
-											connections[key]['info'] = info;
-									}
-							}
-							if(infoObj['character'] === 'Morgana') {
-									info = getByChar('Mordred', room['name']);
-									info = info.concat(getByChar('Minion of Mordred', room['name']));
-									info2 = [];
-									while(info.length) {
-											info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
-									}
-									info = info2;
-									if(info.length) {
-											info = info.join(', ') + " are your fellow evil doers.";
-											infoObj['info'] = info;
-											connections[key]['info'] = info;
-									}
-							}
-							if(infoObj['character'] === 'Minion of Mordred') {
-									info = getByChar('Mordred', room['name']);
-									info = info.concat(getByChar('Morgana', room['name']));
-									info = info.concat(getByChar('Minion of Mordred', room['name']));
-									info2 = [];
-									while(info.length) {
-											info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
-									}
-									info = info2;
-									info = info.filter(function(name) {
-											return name !== connections[socket.id]['name']
-									});
-									if(info.length) {
-											info = info.join(', ') + " are your fellow evil doers.";
-											infoObj['info'] = info;
-											connections[key]['info'] = info;
-									}
-							}
-							infoObj['areLeader'] = connections[key]['name'] === room['creator'];
-							io.to(key).emit('middleWareHandlePls', ['roles assigned', infoObj]);
-						}
-					}
-				}
-		});
-		socket.on('player ready', function(data) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				room['playersReady'] = room['playersReady'] + 1;
-				if(room['playersReady'] === room['playerArr'].length) {
-						for(var key in connections) {
-								if(connections[key]['roomName'] === room['name'])
-									io.to(key).emit('middleWareHandlePls', ['all players ready', room['name']]);
-						}
-						room['playersReady'] = 0;
-				} else {
-						console.log('counting ready players: ', room['playersReady']);
-				}
-		});
-		socket.on('start game', function(data) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				room['playersPerQuest'] = quests[room['playerArr'].length];
-				room['currentLeaderIndex'] = 0;
-				room['questsCompleted'] = [];
-				room['questsRejected'] = 0;
-				room['playersReady'] = 0;
-				var roomThatIsStarting = connections[socket.id]['roomName'];
-				for(var key in connections) {
-						if(connections[key]['roomName'] === roomThatIsStarting) io.to(key).emit('middleWareHandlePls', ['game start', 'useless'])
-				}
-		});
-		socket.on('get info for quest to propose', function(data) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				var dataObj = {};
-				for(var key in room) {
-						dataObj[key] = room[key];
-				}
-				dataObj['questProposer'] = room['playerArr'][room['currentLeaderIndex'] % room['playerArr'].length];
-				dataObj['nameOfClient'] = connections[socket.id]['name'];
-				socket.emit('middleWareHandlePls', ['info for quest to propose', dataObj]);
-		});
-		socket.on('propose quest party', function(questPartyArg) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				room['questPartyArg'] = questPartyArg;
-				for(var key in connections) {
-						if(connections[key]['roomName'] === room['name']) io.to(key).emit('middleWareHandlePls', ['vote on quest', 'useless']);
-				}
-				room['questPartyVotes'] = [];
-				room['currentLeaderIndex'] = room['currentLeaderIndex'] + 1;
-		});
-		socket.on('get vote info', function(data) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				room['questResult'] = [];
-				socket.emit('middleWareHandlePls', ['vote data', room]);
-		});
-		socket.on('vote cast', function(vote) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				var key = connections[socket.id]['name'];
-				var obj = {};
-				obj[key] = vote;
-				room['questPartyVotes'].push(obj);
-				for(var key in connections) {
-						if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['someone voted', connections[socket.id]['name']]);
-				}
-				if(room['questPartyVotes'].length === room['playerArr'].length) {
-						for(var key in connections) {
-								if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['everyone voted', room['questPartyVotes']])
-						}
-				}
-		});
-		socket.on('vote happened', function(data) {
-				var room = rooms.filter(function(room) {
-						return room['name'] === connections[socket.id]['roomName'];
-				})[0];
-				if(room['creator'] === connections[socket.id]['name']) {
-						if(!data) {
+						socket.on('set up room', function(uselessData) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								console.log('found room: ', room);
+								if(!room['creator'].localeCompare(connections[socket.id]['name'])) {
+										console.log('found creator: ', room['creator']);
+										var charCopy = [];
+										var playerCopy = [];
+										while(room['characterArr'].length) {
+												charCopy.push(room['characterArr'].splice(Math.floor(Math.random() * room['characterArr'].length), 1)[0]);
+										};
+										while(room['playerArr'].length) {
+												playerCopy.push(room['playerArr'].splice(Math.floor(Math.random() * room['playerArr'].length), 1)[0]);
+										};
+										room['playerArr'] = playerCopy;
+										room['characterArr'] = charCopy;
+										room['playerArr'].forEach(function(playerName, i) {
+												connections[getByName(playerName)]['character'] = room['characterArr'][i];
+										});
+										for(var key in connections) {
+												if(room['playerArr'].indexOf(connections[key]['name']) >= 0) {
+														console.log('emitting to '+connections[key]['name']+' to tell him that he is '+connections[key]['character']);
+														infoObj = {character: connections[key]['character'], info: 'nothing.'};
+														connections[key]['info'] = 'nothing';
+														if(infoObj['character'] === "Merlin") {
+																info = getByChar('Morgana', room['name']);
+																info = info.concat(getByChar('Oberon', room['name']));
+																info = info.concat(getByChar('Minion of Mordred', room['name']));
+																info2 = [];
+																while(info.length) {
+																		info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
+																}
+																info = info2;
+																info = info.join(', ') + " are bad.";
+																infoObj['info'] = info;
+																connections[key]['info'] = info;
+														}
+														if(infoObj['character'] === 'Percival') {
+																info = getByChar('Merlin', room['name']);
+																info = info.concat(getByChar('Morgana', room['name']));
+																info2 = [];
+																while(info.length) {
+																		info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
+																}
+																info = info2;
+																if(info.length) {
+																		info = 'out of '+info.join(' and ') + " one is Morgana, one is Merlin, but which is which?";
+																		infoObj['info'] = info;
+																		connections[key]['info'] = info;
+																}
+														}
+														if(infoObj['character'] === 'Mordred') {
+																info = getByChar('Morgana', room['name']);
+																info = info.concat(getByChar('Minion of Mordred', room['name']));
+																info2 = [];
+																while(info.length) {
+																		info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
+																}
+																info = info2;
+																if(info.length) {
+																		info = info.join(', ') + " are your fellow evil doers.";
+																		infoObj['info'] = info;
+																		connections[key]['info'] = info;
+																}
+														}
+														if(infoObj['character'] === 'Morgana') {
+																info = getByChar('Mordred', room['name']);
+																info = info.concat(getByChar('Minion of Mordred', room['name']));
+																info2 = [];
+																while(info.length) {
+																		info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
+																}
+																info = info2;
+																if(info.length) {
+																		info = info.join(', ') + " are your fellow evil doers.";
+																		infoObj['info'] = info;
+																		connections[key]['info'] = info;
+																}
+														}
+														if(infoObj['character'] === 'Minion of Mordred') {
+																info = getByChar('Mordred', room['name']);
+																info = info.concat(getByChar('Morgana', room['name']));
+																info = info.concat(getByChar('Minion of Mordred', room['name']));
+																info2 = [];
+																while(info.length) {
+																		info2.push(info.splice(Math.floor(Math.random() * info.length), 1)[0]);
+																}
+																info = info2;
+																info = info.filter(function(name) {
+																		return name !== connections[socket.id]['name']
+																});
+																if(info.length) {
+																		info = info.join(', ') + " are your fellow evil doers.";
+																		infoObj['info'] = info;
+																		connections[key]['info'] = info;
+																}
+														}
+														infoObj['areLeader'] = connections[key]['name'] === room['creator'];
+														io.to(key).emit('middleWareHandlePls', ['roles assigned', infoObj]);
+												}
+										}
+								}
+						});
+						socket.on('player ready', function(data) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								room['playersReady'] = room['playersReady'] + 1;
+								if(room['playersReady'] === room['playerArr'].length) {
+										for(var key in connections) {
+												if(connections[key]['roomName'] === room['name'])
+								io.to(key).emit('middleWareHandlePls', ['all players ready', room['name']]);
+										}
+										room['playersReady'] = 0;
+								} else {
+										console.log('counting ready players: ', room['playersReady']);
+								}
+						});
+						socket.on('start game', function(data) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								room['playersPerQuest'] = quests[room['playerArr'].length];
+								room['currentLeaderIndex'] = 0;
+								room['questsCompleted'] = [];
+								room['questsRejected'] = 0;
+								room['playersReady'] = 0;
+								var roomThatIsStarting = connections[socket.id]['roomName'];
+								for(var key in connections) {
+										if(connections[key]['roomName'] === roomThatIsStarting) io.to(key).emit('middleWareHandlePls', ['game start', 'useless'])
+								}
+						});
+						socket.on('get info for quest to propose', function(data) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								var dataObj = {};
+								for(var key in room) {
+										dataObj[key] = room[key];
+								}
+								dataObj['questProposer'] = room['playerArr'][room['currentLeaderIndex'] % room['playerArr'].length];
+								dataObj['nameOfClient'] = connections[socket.id]['name'];
+								socket.emit('middleWareHandlePls', ['info for quest to propose', dataObj]);
+						});
+						socket.on('propose quest party', function(questPartyArg) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								room['questPartyArg'] = questPartyArg;
+								for(var key in connections) {
+										if(connections[key]['roomName'] === room['name']) io.to(key).emit('middleWareHandlePls', ['vote on quest', 'useless']);
+								}
+								room['questPartyVotes'] = [];
+								room['currentLeaderIndex'] = room['currentLeaderIndex'] + 1;
+						});
+						socket.on('get vote info', function(data) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								room['questResult'] = [];
+								socket.emit('middleWareHandlePls', ['vote data', room]);
+						});
+						socket.on('vote cast', function(vote) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								var key = connections[socket.id]['name'];
+								var obj = {};
+								obj[key] = vote;
+								room['questPartyVotes'].push(obj);
+								for(var key in connections) {
+										if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['someone voted', connections[socket.id]['name']]);
+								}
+								if(room['questPartyVotes'].length === room['playerArr'].length) {
+										console.log(room['questPartyVotes']);
+										for(var key in connections) {
+												if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['everyone voted', room['questPartyVotes']])
+										}
+								}
+						});
+						socket.on('vote happened', function(data) {
+								var room = rooms.filter(function(room) {
+										return room['name'] === connections[socket.id]['roomName'];
+								})[0];
+								if(room['creator'] === connections[socket.id]['name']) {
+										if(!data) {
 								room['questsRejected'] = room['questsRejected'] + 1;
 								console.log('quest did not happen');
 						} else {
@@ -417,8 +418,30 @@ io.on('connection', function(socket) {
 						return room['name'] === connections[socket.id]['roomName'];
 				})[0];
 				if(room['creator'] === connections[socket.id]['name']) {
-						if(pass) room['questsCompleted'].push('Pass');
+						if(pass) {
+								room['questsCompleted'].push('Pass');
+								//delete the other two pushes!
+								room['questsCompleted'].push('Pass');
+								room['questsCompleted'].push('Pass');
+						}
 						else room['questsCompleted'].push('Fail');
+						console.log(room['questsCompleted']);
+						var passes = 0;
+						var fails = 0;
+						room['questsCompleted'].forEach(function(result) {
+								if(result === 'Fail') fails++;
+								else passes++;
+						});
+						if(passes >= 3) {
+						for(var key in connections) {
+								if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['good wins', room['characterArr'].indexOf('Merlin') >= 0])
+								}
+						}
+						if(fails >= 3) {
+								for(var key in connections) {
+										if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['evil wins', 'useless'])
+								}
+						}
 				}
 		});
 		socket.on('ready for quest propose', function (data) {
@@ -457,6 +480,29 @@ io.on('connection', function(socket) {
 						room['playersReady'] = 0;
 				}
 		});
+		socket.on('get assassination info', function(data) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				var chosenPlayer = getByChar('Minion of Mordred', room['name'])[0];
+				for(var key in connections) {
+						var dataObj = {};
+						dataObj['chosenPlayer'] = chosenPlayer;
+						dataObj['clientName'] = connections[key]['name'];
+						dataObj['playerArr'] = room['playerArr'];
+						if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['assassination data', dataObj])
+				}
+		});
+		socket.on('kill', function(choice) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				var chosenPlayer = getByChar('Merlin', room['name'])[0];
+				for(var key in connections) {
+						if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['kill result', chosenPlayer === choice])
+				}
+		});
+
 });
 
 http.listen(3000, function() {

@@ -3,8 +3,8 @@
 </div>
 <div ng-hide='nameOfClient.localeCompare(questProposer)' ng-show='playerArr.length'>
 		You are proposing quest. <br>
-		<span ng-show='questsRejected && !playersReady'> Waiting for players to finish viewing result of last vote. </span>	
-		<form ng-submit='proposeTeam(choice1, choice2, choice3, choice4, choice5)' ng-show='!questsRejected || playersReady'>	
+		<!--		<span ng-show='questsRejected && !playersReady'> Waiting for players to finish viewing result of last vote. </span>	 -->
+		<form ng-submit='proposeTeam(choice1, choice2, choice3, choice4, choice5)'>	
 				<span ng-hide='playersPerQuest[questsCompleted.length] < 1'>
 						<select ng-model=choice1 ng-options='player as player for player in playerArr'></select>
 				</span> 

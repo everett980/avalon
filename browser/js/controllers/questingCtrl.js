@@ -1,10 +1,11 @@
-app.controller('QuestingCtrl', function($scope, QuestingFactory, $on, $state) {
+app.controller('QuestingCtrl', function($scope, QuestingFactory, $state) {
 		$scope.waitingForNextState = false;
 		QuestingFactory.getQuestingInfo();
 		QuestingFactory.gotToQuestPage();
 		$scope.showForm = false;
 		$scope.waitingOnResults = true;
 		$scope.allVoted = false;
+		var evilWon = false;
 		$scope.passFail = function(agree, disagree) {
 				if(!agree) agree = false;
 				if(!disagree) disagree == false;
@@ -15,11 +16,11 @@ app.controller('QuestingCtrl', function($scope, QuestingFactory, $on, $state) {
 				QuestingFactory.vote(agree, disagree);
 				$scope.showForm = false;
 		}
-		$on('ready to vote', function(emit, data) {
+		$scope.$on('ready to vote', function(emit, data) {
 				$scope.showForm = true;
 				$scope.$digest();
 		});
-		$on('quest data', function(emit, roomObj) {
+		$scope.$on('quest data', function(emit, roomObj) {
 			for(var key in roomObj) {
 				$scope[key] = roomObj[key];
 			}
@@ -30,11 +31,11 @@ app.controller('QuestingCtrl', function($scope, QuestingFactory, $on, $state) {
 			console.log($scope.notYetVoted);
 			$scope.$digest;
 		});		
-		$on('one quester voted', function(emit, name) {
+		$scope.$on('one quester voted', function(emit, name) {
 				$scope.notYetVoted = $scope.notYetVoted.filter(function(player) { return player !== name } );
 				$scope.$digest();
 		});
-		$on('questers voted', function(emit, data) {
+		$scope.$on('questers voted', function(emit, data) {
 				$scope.waitingOnResults = false;
 				$scope.allVoted = true;
 				var passes = 0;	
@@ -58,11 +59,22 @@ app.controller('QuestingCtrl', function($scope, QuestingFactory, $on, $state) {
 				$scope.results = tempString;
 				$scope.$digest();
 		});
-		$on('everyone ready for lady', function(emit, data) {
+		$scope.$on('everyone ready for lady', function(emit, data) {
 				$state.go('lady');
 		});
-		$on('everyone ready', function(emit, data) {
+		$scope.$on('everyone ready', function(emit, data) {
 				$state.go('teamProposal');
+		});
+		$scope.$on('evil wins', function(emit, data) {
+			if(!evilWon) alert('Evil won');
+			evilWon = true;
+		});
+		$scope.$on('good wins', function(emit, data) {
+				if(!data) alert('Good won');
+				else {
+						alert('Good won! Unless..... can the agents of evil assassinate Merlin?');
+						$state.go('assassination');
+				}
 		});
 		$scope.goToQuestPropose = function() {
 				$scope.waitingForNextState = true;

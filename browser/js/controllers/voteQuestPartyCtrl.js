@@ -1,4 +1,4 @@
-app.controller('VoteQuestPartyCtrl', function($scope, VoteQuestPartyFactory, $on, $state) {
+app.controller('VoteQuestPartyCtrl', function($scope, VoteQuestPartyFactory, $state) {
 		$scope.waitingForNextState = false;
 		VoteQuestPartyFactory.getVotingInfo();
 		$scope.showForm = true;
@@ -14,18 +14,20 @@ app.controller('VoteQuestPartyCtrl', function($scope, VoteQuestPartyFactory, $on
 				VoteQuestPartyFactory.vote(agree, disagree);
 				$scope.showForm = false;
 		}
-		$on('vote data', function(emit, roomObj) {
+		$scope.$on('vote data', function(emit, roomObj) {
 			for(var key in roomObj) {
 				$scope[key] = roomObj[key];
 			}
 			$scope.notYetVoted = roomObj['playerArr'];
 			$scope.$digest;
 		});		
-		$on('someone voted', function(emit, name) {
+		$scope.$on('someone voted', function(emit, name) {
 				$scope.notYetVoted = $scope.notYetVoted.filter(function(player) { return player !== name } );
 				$scope.$digest();
 		});
-		$on('everyone voted', function(emit, data) {
+		$scope.$on('everyone voted', function(emit, data) {
+//				emit.stopPropagation();
+				console.log('front end is aware that everyone voted');
 				$scope.waitingOnResults = false;
 				$scope.allVoted = true;
 				var passes = 0;	
@@ -46,14 +48,16 @@ app.controller('VoteQuestPartyCtrl', function($scope, VoteQuestPartyFactory, $on
 				$scope.results = tempString;
 				$scope.$digest();
 		});
-		$on('everyone ready', function(emit, data) {
+		$scope.$on('everyone ready', function(emit, data) {
+				//$scope.$destroy();
 				$state.go('teamProposal');
 		});
 		$scope.goToQuesting = function() {
 				$scope.waitingForNextState = true;
 				VoteQuestPartyFactory.goQuest();
 		}
-		$on('everyone go quest', function(emit, data) {
+		$scope.$on('everyone go quest', function(emit, data) {
+				//$scope.$destroy();
 				$state.go('questing');
 		});
 		$scope.goBackToQuestProposal = function() {

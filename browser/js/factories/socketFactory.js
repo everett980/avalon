@@ -1,4 +1,4 @@
-app.factory('SocketFactory', function($on, $emit) {
+app.factory('SocketFactory', function($on, $emit, $rootScope) {
 		var socket = io.connect();
 		var factory = {};
 		factory.emit = function(emitName, emitMessage) {
@@ -6,7 +6,7 @@ app.factory('SocketFactory', function($on, $emit) {
 		}
 		socket.on('middleWareHandlePls', function(emitArr) {
 				console.log('middle ware is handling!', emitArr);
-				$emit(emitArr[0], emitArr[1]);
+				$rootScope.$broadcast(emitArr[0], emitArr[1]);
 		})
 		return factory;
 });

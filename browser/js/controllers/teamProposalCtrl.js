@@ -1,7 +1,7 @@
-app.controller('TeamProposalCtrl', function($scope, TeamProposalFactory, $on, $state) {
+app.controller('TeamProposalCtrl', function($scope, TeamProposalFactory, $state) {
 		$scope.playersReady = false;
 		TeamProposalFactory.getInfoForQuestToPropose();
-		$on('info for quest to propose', function(emit, roomObj) {
+		$scope.$on('info for quest to propose', function(emit, roomObj) {
 				for(var key in roomObj) {
 						$scope[key] = roomObj[key];
 				}
@@ -17,15 +17,15 @@ app.controller('TeamProposalCtrl', function($scope, TeamProposalFactory, $on, $s
 				$scope.questsRejected = data.questsRejected;
 				$scope.questsCompleted = data.questsCompleted; */
 		});
-		$on('vote on quest', function(emit, data) {
+		$scope.$on('vote on quest', function(emit, data) {
 				$state.go('voteQuestParty');
 		});
-		$on('everyone ready', function(emit, data) {
+		$scope.$on('everyone ready', function(emit, data) {
 				$scope.playersReady = true;
 				console.log('about to digest');
 				$scope.$digest();
 		});
-		/* $on('everyone ready for proposal phase', function(emit data) {
+		/* $scope.$on('everyone ready for proposal phase', function(emit data) {
 				TeamProposalFactory.getInfoForQuestToPropose(); */
 		$scope.proposeTeam = function() {
 				console.log(arguments);

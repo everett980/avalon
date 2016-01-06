@@ -1,0 +1,7 @@
+<div>
+		Time to assassinate Merlin!
+		<form ng-submit='kill(choice)' ng-show='show'>
+				<select ng-model='choice' ng-options='player as player for player in playerArr'></select>
+				<button ng-submit> Kill! </button>
+		</form>
+</div>
