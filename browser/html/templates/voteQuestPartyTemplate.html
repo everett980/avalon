@@ -1,0 +1,27 @@
+<div>
+		Voting on quest party consisting of: {{questPartyArg.join(', ')}}
+		<form ng-submit='vote(agree, disagree)' ng-show='showForm'>
+				<input type='checkbox' ng-model='agree'> Vote in favor of this quest party. <br>
+				<input type='checkbox' ng-model='disagree'> Vote against this quest party. <br>
+				<input type='submit'>
+		</form>
+		<div ng-show='waitingOnResults'>
+				Waiting on {{notYetVoted}}.
+		</div>
+		<div ng-show='allVoted'>
+				The votes are in!
+				{{results}}
+				<button ng-click='goToQuesting()' ng-show='passed && !waitingForNextState'> Click When Ready to Move on to Quest </button>
+				<button ng-click='goBackToQuestProposal()' ng-show='!passed && !waitingForNextState'> Click When Ready to Propose New Quest </button>
+				<div ng-show='waitingForNextState'>
+						Waiting for all players to be ready before changing state.
+				</div>
+		</div>	
+		<br><br><br><br>
+		{{playerArr}} <br>
+		{{playersPerQuest}} <br>
+		{{questsCompleted}} <br>
+		{{questsCompleted.length}} <br>
+		{{playersPerQuest[questsCompleted.length]}} <br>
+		{{questsRejected}} <br>
+</div>

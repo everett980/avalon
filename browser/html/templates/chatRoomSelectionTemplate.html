@@ -1,0 +1,34 @@
+<div>
+		<ul>
+				<li ng-repeat='room in roomArr'> Room: {{room['name']}} Host: {{room['creator']}} Characters: {{room['characterArr'].join(', ')}}. Lady: {{room['lady']}}<br> Players in room: {{room['playerArr'].join(', ')}}. <span ng-show="room['characterArr'].length > room['playerArr'].length"> Players needed to start: {{room['characterArr'].length-room['playerArr'].length}} </span> <span ng-click=joinRoom(room['name'])>Click here to join room</span><!-- room: {{room}} --> </li>
+		</ul>
+		<div>
+				<p ng-click='toggleAddRoomForm()'>Click here to <span ng-show='!showForm'>add room</span><span ng-show='showForm'>cancel room creation</span>.</p>
+		<form ng-submit='addRoom(roomName, numRegGood, numRegBad, Percival, Merlin, Mordred, Morgana, Oberon, ladyBox)' ng-show='showForm'>
+				Room Name: <input type='text' ng-model='roomName'> <br>
+				Number of regular good guys (not Merlin or Percival): 
+				<select ng-model='numRegGood'> 
+						<option value='0' selected='selected'>0</option>
+						<option value='1'>1</option>
+						<option value='2'>2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option>
+						<option value='5'>5</option>
+						<option value='6'>6</option>
+				</select> <br>
+				Number of regular bad guys (not Mordred, Morgana, or Oberon (one regular minion will be the assassin)):
+				<select ng-model='numRegBad' value='0'>
+						<option value='1' selected>1</option>
+						<option value='2'>2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option>
+				</select> <br>
+				<input type='checkbox' ng-model='Percival'> Percival <br>
+				<input type='checkbox' ng-model='Merlin'> Merlin <br>
+				<input type='checkbox' ng-model='Mordred'> Mordred <br>
+				<input type='checkbox' ng-model='Morgana'> Morgana <br>
+				<input type='checkbox' ng-model='Oberon'> Oberon <br>
+				<input type='checkbox' ng-model='ladyBox'> Lady Card <br>
+				<input type='submit'>
+		</form>
+</div>

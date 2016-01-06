@@ -1,0 +1,9 @@
+<div>
+		In game, roles assigned here.
+		<div ng-show='rolesAssigned'>
+				You are {{character}}. You know {{info}}
+				<div ng-hide='!areLeader'>
+						<button ng-click='startGame()'>Begin Game</button>
+				</div>
+		</div>
+</div>

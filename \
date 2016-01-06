@@ -1,0 +1,26 @@
+<div>
+		<ul>
+				<li ng-repeat='room in roomArr'> Room: {{room['name']}} Host: {{room['creator']}} Characters: {{room['characterArr']}} Lady: {{room['lady']}} room: {{room}}</li>
+		</ul>
+		<div>
+				<p ng-click='toggleAddRoomForm()'>Click here to add room.</p>
+		<form ng-submit='addRoom(roomName, character, ladyBox)' ng-show='showForm'>
+				Room Name: <input type='text' ng-model='roomName'> <br>
+				<select ng-model='numRegGood' ng-options='n for number in numbers'></select>
+				<select ng-model='numRegBad' value='0'>
+						<option value='0' selected>0</option>
+						<option value='1'>1</option>
+						<option value='2'>2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option>
+				</select>
+				<input type='checkbox' ng-model='Merlin'> Merlin <br>
+				<input type='checkbox' ng-model='Morgana'> Morgana <br>
+				<input type='checkbox' ng-model='Mordred'> Mordred <br>
+				<input type='checkbox' ng-model='Percival'> Percival <br>
+				<input type='checkbox' ng-model='Oberon'> Oberon <br>
+				<input type='checkbox' ng-model='Assassin'> Assassin <br>
+				<input type='checkbox' ng-model='ladyBox'> Lady Card <br>
+				<input type='submit'>
+		</form>
+</div>

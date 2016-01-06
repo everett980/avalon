@@ -1,0 +1,34 @@
+<div ng-hide='nameOfClient === questProposer'>
+		Waiting for {{questProposer}} to propose team.
+</div>
+<div ng-hide='nameOfClient.localeCompare(questProposer)' ng-show='playerArr.length'>
+		You are proposing quest. <br>
+		<span ng-show='questsRejected && !playersReady'> Waiting for players to finish viewing result of last vote. </span>	
+		<form ng-submit='proposeTeam(choice1, choice2, choice3, choice4, choice5)' ng-show='!questsRejected || playersReady'>	
+				<span ng-hide='playersPerQuest[questsCompleted.length] < 1'>
+						<select ng-model=choice1 ng-options='player as player for player in playerArr'></select>
+				</span> 
+				<span ng-hide='playersPerQuest[questsCompleted.length] < 2'>
+						<select ng-model=choice2 ng-options='player as player for player in playerArr'></select>
+				</span> 
+				<span ng-hide='playersPerQuest[questsCompleted.length] < 3'>
+						<select ng-model=choice3 ng-options='player as player for player in playerArr'></select>
+				</span> 
+				<span ng-hide='playersPerQuest[questsCompleted.length] < 4'>
+						<select ng-model=choice4 ng-options='player as player for player in playerArr'></select>
+				</span> 
+				<span ng-hide='playersPerQuest[questsCompleted.length] < 5'>
+						<select ng-model=choice5 ng-options='player as player for player in playerArr'></select>
+				</span> 
+				<button ng-submit>Submit</button>
+		</form>	
+		<!-- <button ng-click='$scope.$digest()'>If you see five small drop downs, and nobody else has any drop downs, press this button.</button> -->
+		<br><br><br><br>
+		{{playerArr}} <br>
+		{{playersPerQuest}} <br>
+		{{questsCompleted}} <br>
+		{{questsCompleted.length}} <br>
+		{{playersPerQuest[questsCompleted.length]}} <br>
+		{{questsRejected}} <br>
+		bleh
+</div>	

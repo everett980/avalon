@@ -1,0 +1,28 @@
+<div>
+		Quest be happen'
+		Quest party consisting of: {{questPartyArg.join(', ')}} will be choosing to pass or fail the quest.
+		<form ng-submit='passFail(pass, fail)' ng-show='showForm && questPartyArg.indexOf(clientName) >= 0'>
+				<input type='checkbox' ng-model='pass'> Pass quest. <br>
+				<input type='checkbox' ng-model='fail'> Fail quest. <br>
+				<input type='submit'>
+		</form>
+		<div ng-show='waitingOnResults'>
+				Waiting on {{notYetVoted}}.
+		</div>
+		<div ng-show='allVoted'>
+				The votes are in!
+				{{results}}
+				<button ng-click='goToQuestPropose()' ng-show='!waitingForNextState && (!lady || questsCompleted.length === 0)'> Continue to Quest Propose </button>
+				<button ng-click='goToLady()' ng-show='!waitingForNextState && lady && questsCompleted.length'> Continue to Lady Phase </button>
+				<div ng-show='waitingForNextState'>
+						Waiting for all players to be ready before changing state.
+				</div>
+		</div>	
+		<br><br><br><br>
+		{{playerArr}} <br>
+		{{playersPerQuest}} <br>
+		{{questsCompleted}} <br>
+		{{questsCompleted.length}} <br>
+		{{playersPerQuest[questsCompleted.length]}} <br>
+		{{questsRejected}} <br>
+</div>
