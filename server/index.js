@@ -73,7 +73,7 @@ io.on('connection', function(socket) {
 						connections[socket.id] = {name: username};
 						socket.emit('middleWareHandlePls', ['successful log in', username]);
 				}
-				console.log(connections);
+		console.log(connections);
 		});
 
 		socket.on('get connections', function(data) {
@@ -109,7 +109,7 @@ io.on('connection', function(socket) {
 		});
 		socket.on('do testing', function() {
 				connections[socket.id]['name'] = 'testRoomMaker';
-				roomObj = {'characterArr' : ['Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Merlin', 'Minion of Mordred'], 'lady' : false, 'playerArr': [], 'creator': connections[socket.id]['name'], 'name' : 'testing', 'playersReady': 0};
+				roomObj = {'characterArr' : ['Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Loyal Servent of Arthur', 'Merlin', 'Minion of Mordred'], 'lady' : true, 'playerArr': [], 'creator': connections[socket.id]['name'], 'name' : 'testing', 'playersReady': 0};
 				testName='e';
 				for(var key in connections) {
 						connections[key]['roomName'] = roomObj['name'];
@@ -278,68 +278,70 @@ io.on('connection', function(socket) {
 								})[0];
 								room['playersPerQuest'] = quests[room['playerArr'].length];
 								room['currentLeaderIndex'] = 0;
+								room['ladyCardHolder'] = room['playerArr'][room['playerArr'].length - 1];
+								//set below to [] after testing
 								room['questsCompleted'] = [];
-								room['questsRejected'] = 0;
-								room['playersReady'] = 0;
-								var roomThatIsStarting = connections[socket.id]['roomName'];
-								for(var key in connections) {
-										if(connections[key]['roomName'] === roomThatIsStarting) io.to(key).emit('middleWareHandlePls', ['game start', 'useless'])
-								}
-						});
-						socket.on('get info for quest to propose', function(data) {
-								var room = rooms.filter(function(room) {
-										return room['name'] === connections[socket.id]['roomName'];
-								})[0];
-								var dataObj = {};
-								for(var key in room) {
-										dataObj[key] = room[key];
-								}
-								dataObj['questProposer'] = room['playerArr'][room['currentLeaderIndex'] % room['playerArr'].length];
-								dataObj['nameOfClient'] = connections[socket.id]['name'];
-								socket.emit('middleWareHandlePls', ['info for quest to propose', dataObj]);
-						});
-						socket.on('propose quest party', function(questPartyArg) {
-								var room = rooms.filter(function(room) {
-										return room['name'] === connections[socket.id]['roomName'];
-								})[0];
-								room['questPartyArg'] = questPartyArg;
-								for(var key in connections) {
-										if(connections[key]['roomName'] === room['name']) io.to(key).emit('middleWareHandlePls', ['vote on quest', 'useless']);
-								}
-								room['questPartyVotes'] = [];
-								room['currentLeaderIndex'] = room['currentLeaderIndex'] + 1;
-						});
-						socket.on('get vote info', function(data) {
-								var room = rooms.filter(function(room) {
-										return room['name'] === connections[socket.id]['roomName'];
-								})[0];
-								room['questResult'] = [];
-								socket.emit('middleWareHandlePls', ['vote data', room]);
-						});
-						socket.on('vote cast', function(vote) {
-								var room = rooms.filter(function(room) {
-										return room['name'] === connections[socket.id]['roomName'];
-								})[0];
-								var key = connections[socket.id]['name'];
-								var obj = {};
-								obj[key] = vote;
-								room['questPartyVotes'].push(obj);
-								for(var key in connections) {
-										if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['someone voted', connections[socket.id]['name']]);
-								}
-								if(room['questPartyVotes'].length === room['playerArr'].length) {
-										console.log(room['questPartyVotes']);
-										for(var key in connections) {
-												if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['everyone voted', room['questPartyVotes']])
-										}
-								}
-						});
-						socket.on('vote happened', function(data) {
-								var room = rooms.filter(function(room) {
-										return room['name'] === connections[socket.id]['roomName'];
-								})[0];
-								if(room['creator'] === connections[socket.id]['name']) {
-										if(!data) {
+				room['questsRejected'] = 0;
+				room['playersReady'] = 0;
+				var roomThatIsStarting = connections[socket.id]['roomName'];
+				for(var key in connections) {
+						if(connections[key]['roomName'] === roomThatIsStarting) io.to(key).emit('middleWareHandlePls', ['game start', 'useless'])
+				}
+		});
+		socket.on('get info for quest to propose', function(data) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				var dataObj = {};
+				for(var key in room) {
+						dataObj[key] = room[key];
+				}
+				dataObj['questProposer'] = room['playerArr'][room['currentLeaderIndex'] % room['playerArr'].length];
+				dataObj['nameOfClient'] = connections[socket.id]['name'];
+				socket.emit('middleWareHandlePls', ['info for quest to propose', dataObj]);
+		});
+		socket.on('propose quest party', function(questPartyArg) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				room['questPartyArg'] = questPartyArg;
+				for(var key in connections) {
+						if(connections[key]['roomName'] === room['name']) io.to(key).emit('middleWareHandlePls', ['vote on quest', 'useless']);
+				}
+				room['questPartyVotes'] = [];
+				room['currentLeaderIndex'] = room['currentLeaderIndex'] + 1;
+		});
+		socket.on('get vote info', function(data) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				room['questResult'] = [];
+				socket.emit('middleWareHandlePls', ['vote data', room]);
+		});
+		socket.on('vote cast', function(vote) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				var key = connections[socket.id]['name'];
+				var obj = {};
+				obj[key] = vote;
+				room['questPartyVotes'].push(obj);
+				for(var key in connections) {
+						if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['someone voted', connections[socket.id]['name']]);
+				}
+				if(room['questPartyVotes'].length === room['playerArr'].length) {
+						console.log(room['questPartyVotes']);
+						for(var key in connections) {
+								if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['everyone voted', room['questPartyVotes']])
+						}
+				}
+		});
+		socket.on('vote happened', function(data) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				if(room['creator'] === connections[socket.id]['name']) {
+						if(!data) {
 								room['questsRejected'] = room['questsRejected'] + 1;
 								console.log('quest did not happen');
 						} else {
@@ -421,8 +423,8 @@ io.on('connection', function(socket) {
 						if(pass) {
 								room['questsCompleted'].push('Pass');
 								//delete the other two pushes!
-								room['questsCompleted'].push('Pass');
-								room['questsCompleted'].push('Pass');
+								//room['questsCompleted'].push('Pass');
+								//room['questsCompleted'].push('Pass');
 						}
 						else room['questsCompleted'].push('Fail');
 						console.log(room['questsCompleted']);
@@ -433,8 +435,8 @@ io.on('connection', function(socket) {
 								else passes++;
 						});
 						if(passes >= 3) {
-						for(var key in connections) {
-								if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['good wins', room['characterArr'].indexOf('Merlin') >= 0])
+								for(var key in connections) {
+										if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['good wins', room['characterArr'].indexOf('Merlin') >= 0])
 								}
 						}
 						if(fails >= 3) {
@@ -502,7 +504,35 @@ io.on('connection', function(socket) {
 						if(connections[key]['roomName'] === connections[socket.id]['roomName']) io.to(key).emit('middleWareHandlePls', ['kill result', chosenPlayer === choice])
 				}
 		});
-
+		socket.on('get lady info', function(data) {
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				var dataObj = {};
+				dataObj.ladyCardHolder= room['ladyCardHolder'];
+				dataObj.playerArr = room['playerArr'];
+				dataObj.questsCompleted = room['questsCompleted'];
+				dataObj.currentLeaderIndex = room['currentLeaderIndex'];
+				dataObj.playersPerQuest = room['playersPerQuest'];
+				dataObj.questsRejected = room['questsRejected'];
+				dataObj.clientName = connections[socket.id]['name'];
+				socket.emit('middleWareHandlePls', ['lady info', dataObj]);
+		});
+		socket.on('lady card played', function(choice) {
+				var roleOfChoice = connections[getByName(choice)]['character'];
+				for(var key in connections) {
+					if(connections[key]['roomName'] === connections[socket.id]['roomName'] && connections[key]['name'] !== connections[socket.id]['name']) {
+						io.to(key).emit('middleWareHandlePls', ['lady results', {wasLadied: choice, allignment: null}]);
+					}
+				}
+				var allignment = 'evil';
+				if(roleOfChoice === 'Loyal Servent of Arthur' || roleOfChoice === 'Percival' || roleOfChoice === 'Merlin') allignment = 'good';
+				socket.emit('middleWareHandlePls', ['lady results', {wasLadied: choice, allignment: allignment}]);
+				var room = rooms.filter(function(room) {
+						return room['name'] === connections[socket.id]['roomName'];
+				})[0];
+				room['ladyCardHolder'] = choice;
+		});	
 });
 
 http.listen(3000, function() {

@@ -13,7 +13,7 @@
 				The votes are in!
 				{{results}}
 				<button ng-click='goToQuestPropose()' ng-show='!waitingForNextState && (!lady || questsCompleted.length === 0)'> Continue to Quest Propose </button>
-				<button ng-click='goToLady()' ng-show='!waitingForNextState && lady && questsCompleted.length'> Continue to Lady Phase </button>
+				<button ng-click='goToLadyPhase()' ng-show='!waitingForNextState && lady && questsCompleted.length'> Continue to Lady Phase </button>
 				<div ng-show='waitingForNextState'>
 						Waiting for all players to be ready before changing state.
 				</div>

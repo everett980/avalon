@@ -59,7 +59,7 @@ app.controller('QuestingCtrl', function($scope, QuestingFactory, $state) {
 				$scope.results = tempString;
 				$scope.$digest();
 		});
-		$scope.$on('everyone ready for lady', function(emit, data) {
+		$scope.$on('everyone ready for lady phase', function(emit, data) {
 				$state.go('lady');
 		});
 		$scope.$on('everyone ready', function(emit, data) {
@@ -82,6 +82,6 @@ app.controller('QuestingCtrl', function($scope, QuestingFactory, $state) {
 		}
 		$scope.goToLadyPhase = function() {
 				$scope.waitingForNextState = true;
-				QuestingFactory.goToLadyState();
+				QuestingFactory.goToLadyPhase();
 		}
 });

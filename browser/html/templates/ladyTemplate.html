@@ -1,0 +1,20 @@
+<div>
+		Waiting for {{ladyCardHolder}} to choose someone to lady.
+		<div ng-show='canLady'>
+				Choose someone to lady: 
+				<form ng-submit='ladying(choice)'>
+						<select ng-model='choice' ng-options='player as player for player in playerArr2'></select>
+						<button ng-submit> Lady! </button>
+				</form>
+		</div>
+		<div ng-show='ladyCardPlayed'>
+				{{ladyCardHolder}} used the lady card on {{wasLadied}}. 
+				<div ng-show='iLadyed'>{{wasLadied}} is {{wasLadiedAllignment}}. </div>
+				<div ng-show='!waitingToContinue'>
+						<button ng-click='goToQuestPropose()'>Continue to quest propose.</button>
+				</div>
+				<div ng-show='waitingToContinue'>
+						Waiting for all players to be ready before continuing.
+				</div>
+		</div>
+</div>
