@@ -1,75 +1,78 @@
 <!doctype html>
 <html>
-		<head>
-				<base href='/' />
-				<title>Socket.IO chat</title>
-				<link href="/public/styles/stylesheet.css" type="text/css" rel="stylesheet" />
-				<script src="/socket.io/socket.io.js"></script>
-				<script src="/node_modules/angular/angular.js"></script>
-				<script src="/node_modules/angular-event-emitter/angular-event-emitter.js"></script>
-				<script src="/browser/js/module.js"></script>
-				
-				<script src="/browser/js/controllers/chatCtrl.js"></script>
-				<script src="/browser/js/controllers/loginCtrl.js"></script>
-				<script src="/browser/js/controllers/debugger.js"></script>
-				<script src="/browser/js/controllers/chatRoomSelectionCtrl.js"></script>
-				<script src="/browser/js/controllers/gameLobbyCtrl.js"></script>
-				<script src="/browser/js/controllers/gameRoomCtrl.js"></script>
-				<script src="/browser/js/controllers/teamProposalCtrl.js"></script>
-				<script src="/browser/js/controllers/voteQuestPartyCtrl.js"></script>
-				<script src="/browser/js/controllers/questingCtrl.js"></script>
-				<script src="/browser/js/controllers/assassinationCtrl.js"></script>
-				<script src="/browser/js/controllers/ladyCtrl.js"></script>
+<head>
+  <base href='/'/>
+  <title>Socket.IO chat</title>
+  <link href="/public/styles/stylesheet.css" type="text/css" rel="stylesheet"/>
+  <link href="/node_modules/normalize.css/normalize.css">
+  <link href="/public/styles/np-styling.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/node_modules/angular/angular.js"></script>
+  <script src="/node_modules/angular-event-emitter/angular-event-emitter.js"></script>
+  <script src="/browser/js/module.js"></script>
 
-				<script src="/browser/js/factories/chatFactory.js"></script>
-				<script src="/browser/js/factories/socketFactory.js"></script>
-				<script src="/browser/js/factories/loginFactory.js"></script>
-				<script src="/browser/js/factories/chatRoomSelectionFactory.js"></script>
-				<script src="/browser/js/factories/gameLobbyFactory.js"></script>
-				<script src="/browser/js/factories/gameRoomFactory.js"></script>
-				<script src="/browser/js/factories/teamProposalFactory.js"></script>
-				<script src="/browser/js/factories/debuggerFactory.js"></script>
-				<script src="/browser/js/factories/voteQuestPartyFactory.js"></script>
-				<script src="/browser/js/factories/questingFactory.js"></script>
-				<script src="/browser/js/factories/assassinationFactory.js"></script>
-				<script src="/browser/js/factories/ladyFactory.js"></script>
+  <script src="/browser/js/controllers/chatCtrl.js"></script>
+  <script src="/browser/js/controllers/loginCtrl.js"></script>
+  <script src="/browser/js/controllers/debugger.js"></script>
+  <script src="/browser/js/controllers/chatRoomSelectionCtrl.js"></script>
+  <script src="/browser/js/controllers/gameLobbyCtrl.js"></script>
+  <script src="/browser/js/controllers/gameRoomCtrl.js"></script>
+  <script src="/browser/js/controllers/teamProposalCtrl.js"></script>
+  <script src="/browser/js/controllers/voteQuestPartyCtrl.js"></script>
+  <script src="/browser/js/controllers/questingCtrl.js"></script>
+  <script src="/browser/js/controllers/assassinationCtrl.js"></script>
+  <script src="/browser/js/controllers/ladyCtrl.js"></script>
 
-				<script src="/browser/js/states/loginState.js"></script>
-				<script src="/browser/js/states/chatRoomSelection.js"></script>
-				<script src="/browser/js/states/gameLobby.js"></script>
-				<script src="/browser/js/states/gameRoom.js"></script>
-				<script src="/browser/js/states/teamProposal.js"></script>
-				<script src="/browser/js/states/voteQuestParty.js"></script>
-				<script src="/browser/js/states/questing.js"></script>
-				<script src="/browser/js/states/assassination.js"></script>
-				<script src="/browser/js/states/lady.js"></script>
+  <script src="/browser/js/factories/chatFactory.js"></script>
+  <script src="/browser/js/factories/socketFactory.js"></script>
+  <script src="/browser/js/factories/loginFactory.js"></script>
+  <script src="/browser/js/factories/chatRoomSelectionFactory.js"></script>
+  <script src="/browser/js/factories/gameLobbyFactory.js"></script>
+  <script src="/browser/js/factories/gameRoomFactory.js"></script>
+  <script src="/browser/js/factories/teamProposalFactory.js"></script>
+  <script src="/browser/js/factories/debuggerFactory.js"></script>
+  <script src="/browser/js/factories/voteQuestPartyFactory.js"></script>
+  <script src="/browser/js/factories/questingFactory.js"></script>
+  <script src="/browser/js/factories/assassinationFactory.js"></script>
+  <script src="/browser/js/factories/ladyFactory.js"></script>
+
+  <script src="/browser/js/states/loginState.js"></script>
+  <script src="/browser/js/states/chatRoomSelection.js"></script>
+  <script src="/browser/js/states/gameLobby.js"></script>
+  <script src="/browser/js/states/gameRoom.js"></script>
+  <script src="/browser/js/states/teamProposal.js"></script>
+  <script src="/browser/js/states/voteQuestParty.js"></script>
+  <script src="/browser/js/states/questing.js"></script>
+  <script src="/browser/js/states/assassination.js"></script>
+  <script src="/browser/js/states/lady.js"></script>
 
 
-				<script src="/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
-		</head>
-		<body>
-				<div ng-app='chat'>
-						<div ng-controller='debugger'>
-								<button ng-click='getConnections()'>See Connections</button>
-								<button ng-click='testRoom()'>Create test room</button>
-						</div>
-						<div ng-controller='ChatCtrl'>
-								<p>this is here for easy inspection
-								<ul id="messages">
-										<li ng-repeat='message in messageArr'> {{message}} </li>
-								</ul>
-								</p>
-								<form id='messageForm' ng-submit="sendMessage(textEntry)">
-										<input id="m" autocomplete="off" / ng-model='textEntry'>
-										<input type='submit'>
-								</form>
-						</div>
-						<div>
-								Ui-view below:
-								<ui-view></ui-view>
-								<a ui-sref='login'>Click me</a>
-						</div>
-				</div>
-
-		</body>
+  <script src="/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+</head>
+<body>
+<div id="dev-developer" ng-controller='debugger'>
+  <button ng-click='getConnections()'>See Connections</button>
+  <button ng-click='testRoom()'>Create test room</button>
+</div>
+<div ng-app='chat'>
+  <div ng-controller='ChatCtrl'>
+    <div ui-view></div>
+    <div id="chat-panel">
+      <p>this is here for easy inspection
+      <ul id="messages">
+        <li ng-repeat='message in messageArr'> {{message}}</li>
+      </ul>
+      </p>
+      <form id='messageForm' ng-submit="sendMessage(textEntry)">
+        <input id="m" autocomplete="off" / ng-model='textEntry'>
+        <input type='submit'>
+      </form>
+    </div>
+  </div>
+  <div>
+    Ui-view below:
+    <a ui-sref='login'>Click me</a>
+  </div>
+</div>
+</body>
 </html>
