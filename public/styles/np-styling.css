@@ -1,4 +1,22 @@
 body {
-  font-size: inherit; }
+  font-size: inherit;
+  background: beige;
+  height: 100%; }
+
+#homeContainer {
+  height: 100vh; }
+  #homeContainer div {
+    height: inherit; }
+    #homeContainer div #mainPanel {
+      position: relative;
+      float: left;
+      width: 67%;
+      height: 100%; }
+    #homeContainer div #chatPanel {
+      background: #ab9d00;
+      position: relative;
+      float: left;
+      width: 33%;
+      height: 100%; }
 
 /*# sourceMappingURL=np-styling.css.map */

@@ -36,7 +36,7 @@ var quests = {
 	8 : [3,4,4,5,5],
 	9 : [3,4,4,5,5],
 	10: [3,4,4,5,5]
-}
+};
 //games with 7+ players require 4th quest to have two failures to count as failed quest
 
 //Rest of app
