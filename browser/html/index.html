@@ -50,7 +50,7 @@
   <script src="/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
 </head>
 <body>
-<div id="dev-developer" ng-controller='debugger'>
+<div id="dev-developer" class="dev-hide" ng-controller='debugger'>
   <button ng-click='getConnections()'>See Connections</button>
   <button ng-click='testRoom()'>Create test room</button>
 </div>
@@ -62,14 +62,26 @@
       <a ui-sref='login'>Join Chat</a>
     </div>
     <!--chat panel all on right split side-->
-    <div id="chatPanel rightSplit">
-      <ul id="messages">
-        <li ng-repeat='message in messageArr'> {{message}}</li>
-      </ul>
-      <form id="messageForm" ng-submit="sendMessage(textEntry)">
-        <input id="m" autocomplete="off" / ng-model='textEntry'>
-        <input type='submit'>
-      </form>
+    <div id="chatPanel">
+      <div id="messageView">
+        <ul id="messages">
+          <li ng-repeat='message in messageArr track by $index'> {{message}}</li>
+        </ul>
+      </div>
+      <div id="messageFormView">
+        <form id="messageForm" ng-submit="sendMessage(textEntry)">
+          <input id="m" autocomplete="off" / ng-model='textEntry'>
+          <input type='submit'>
+        </form>
+      </div>
+      <div id="usersView">
+        <div id="usersViewTitle">
+          0 Users Online <!--should interpolate users online-->
+        </div>
+        <div>
+          User 1!
+        </div>
+      </div>
     </div>
   </div>
 </div>
