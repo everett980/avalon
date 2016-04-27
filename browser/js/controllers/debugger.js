@@ -19,4 +19,7 @@ app.controller('debugger', function($scope, $state, SocketFactory, DebuggerFacto
 		$on('test room ready', function(useless, useless) {
 				$state.go('gameRoom');
 		});
+		$scope.testState = function(stateName) {
+			$state.go(stateName);
+		}
 });
