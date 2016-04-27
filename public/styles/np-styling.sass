@@ -1,0 +1,60 @@
+.dev-hide
+  //special class to ensure elements are hidden. Not to be used in production
+  display: none !important
+//div
+//  border: 1px solid red
+body
+  font-size: inherit
+  background: beige
+  height: 100%
+
+#homeContainer > div > div
+  padding: 20px
+
+#homeContainer
+  height: 100vh
+  div
+    height: inherit
+    #mainPanel
+      position: relative
+      float: left
+      width: 67%
+      height: 100%
+    #chatPanel
+      background: #c2c3b0
+      position: relative
+      display: inline-block
+      float: left
+      width: 33%
+      height: 100%
+      #messageView
+        height: 70%
+        overflow: auto
+        background: #cfcfcf
+        border: 2px solid rgba(136, 136, 136, 0.58)
+        border-bottom: none
+        #messages
+          list-style-type: none
+        li
+          padding: 5px 10px
+          &:nth-child(even)
+            background: rgba(127, 127, 127, 0.36)
+          &:nth-child(odd)
+            background: rgba(62, 188, 211, 0.4)
+      #usersView
+        height: 20%
+        padding: 30px 0 0 0
+        x-overflow: auto
+        y-overflow: hidden
+      #messageFormView
+        height: 10%
+        #messageForm
+          background: #000
+          padding: 3px
+          input
+            display: block
+            width: 100%
+            border: 0
+            padding: 10px
+          button
+            width: 9%
